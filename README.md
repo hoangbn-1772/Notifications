@@ -1,4 +1,4 @@
-# Notifications
+﻿# Notifications
 # Overview
 	Notification là một tin nhắn hiển thị bên ngoài giao diện người dùng nhằm thông báo tới người dùng khi ứng dụng có event.
 ## Các dạng hiển thị thông báo
@@ -167,9 +167,8 @@ Một số thay đổi theo phiên bản của Android
 
 	<img src="images/push_notification.png"/>
 
-- Cấu trúc: Gồm 3 phần chính
+- Cấu trúc: Gồm 2 phần chính
 	+ Server: Cung cấp dịch vụ (APNS, FCM, SNS, Pushwoosh,...)
-	+ Application server 
 	+ Thiết bị cuối: hiển thị thông báo.
 - Cơ chế hoạt động:
 	+ Các thiết bị client sẽ đăng ký với server để lấy mã token.
@@ -195,19 +194,25 @@ sự chú ý của người dùng.
 	+ Thời gian triển khai nhanh, config server dễ dàng
 	+ Tiết kiệm chi.
 - Message types trong FCM
-	+ Notification messages: Được xử lý tự động bởi FCM SDK/ onMessageReceived được gọi khi app ở foreground
-	+ Data message: Được xử lý bởi client app/ onMessageReceived được gọi khi app ở cả foreground/background
+	+ Notification messages: Được xử lý tự động bởi FCM SDK (FCM tự động hiển thị thông báo)/ onMessageReceived được gọi khi app ở foreground. Sử dụng khi chỉ hiển thị thông báo tới người dùng.
+	+ Data message: Được xử lý bởi client app/ onMessageReceived được gọi khi app ở cả foreground/background. Sử dụng khi muốn xử lý tin nhắn ở client.
 - Cấu trúc Notification message:
 
 	<img src="images/notification_messages.png"/>
 
 - Xử lý thông báo:
-	+ Để nhận notification, tạo 1 service kế thừa FirebaseMessagingService và override 2 method onMessageReceive và onDeleteMessages, Firebase notifications được xử lý khác nhau phụ thuộc vào trạng thái của app (background/foreground)
-	+ Foreground: Khi app ở trạng thái foreground, tất cả các tin nhắn nhận được xử lý bởi app. Thực hiện trong method onMessageReceive, hàm này chỉ được gọi khi app ở trạng thái foreground.
-	+ Background: Notification sẽ được xử lý theo quy trình Google Service. Thay vì sử dụng notification messages thay bằng data massage
+	+ Foreground: 
+		+ Notification messages: : Thông báo được xử lý trong method onMessageReceive.
+		+ Data messages: Thông báo được xử lý trong method onMessageReceive.
+		+ Both: Thông báo được xử lý trong method onMessageReceive.
+	+ Background:
+		+ Notification messages: Được gửi đến khay thông báo.
+		+ Data messages: Thông báo được xử lý trong method onMessageReceive.
+		+ Both: Thông báo được gửi đến khay thông báo đối với Notification messages, và xử lý data khi tap vào notification.
 
 	<img src="images/handling_messages.png"/>
 
+https://firebase.google.com/docs/cloud-messaging/concept-options?hl=vi
 #### Practice:
 - Tạo project:
 - Đăng ký với Firebase để generate token (Firebase Console)
@@ -239,7 +244,7 @@ sự chú ý của người dùng.
 	+ https://firebase.google.com/docs/cloud-messaging/android/receive
 	+ https://medium.com/@nileshsingh/how-to-add-push-notification-capability-to-your-android-app-a3cac745e56e
 	+ https://medium.com/techsuzu/android-push-notification-using-fcm-firebase-cloud-messaging-c37d165b8320
-	+ https://medium.com/@cdmunoz/working-easily-with-fcm-push-notifications-in-android-e1804c80f74
+
 - Đọc thêm:
 	+ https://medium.com/@deividi/a-good-way-to-handle-incoming-notifications-in-android-dc64c29041a5
 	+ https://android.jlelse.eu/android-push-notification-using-firebase-and-advanced-rest-client-3858daff2f50
