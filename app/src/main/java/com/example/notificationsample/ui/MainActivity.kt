@@ -6,10 +6,8 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Telephony
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -19,15 +17,12 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.example.notificationsample.R
-import com.example.notificationsample.data.db.MockDatabase
 import com.example.notificationsample.services.BasicBroadcastReceiver
-import com.example.notificationsample.utils.NotificationUtil
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, View.OnClickListener {
 
-    private val mNotificationManagerCompat by lazy { NotificationManagerCompat.from(applicationContext) }
     private var mSelectedNotification = 0
     private val basicBroadcastReceiver = BasicBroadcastReceiver()
 
@@ -64,9 +59,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
         buttonNotificationBasic.setOnClickListener(this)
         buttonSubmit.setOnClickListener(this)
 
-        /**
-         * Create spinner
-         */
+        /*Create spinner*/
         val adapter: ArrayAdapter<CharSequence> = ArrayAdapter(
             this,
             android.R.layout.simple_spinner_item,
@@ -85,9 +78,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
         LocalBroadcastManager.getInstance(this).registerReceiver(basicBroadcastReceiver, filter)
     }
 
-    /**
-     * Notification basic
-     */
+    /*Notification basic*/
     private fun startNotificationBasic() {
         createNotificationChannel()
 
@@ -97,9 +88,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 
-        /**
-         * Add action buttons:except instead of launching an activity, can start service/broadcast...
-         */
+        /*Add action buttons:except instead of launching an activity, can start service/broadcast...*/
         val snoozeIntent = Intent(this, BasicBroadcastReceiver::class.java).apply {
             action = ACTION_SNOOZE
             putExtra(CHANNEL_ID, 100)
@@ -125,21 +114,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
         }
     }
 
-    /**
-     * Add a direct reply action
-     * Begin Android 7.0
-     */
-    private fun createReplyDirect() {
-        var replyLabel = resources.getString(R.string.reply_label)
-        var remoteInput = RemoteInput.Builder(KEY_TEXT_REPLY).run {
-            setLabel(replyLabel)
-            build()
-        }
-    }
-
-    /**
-     * Add a progress bar
-     */
+    /*Add a progress bar*/
     private fun createProgressBarInNotification() {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID).apply {
             setContentTitle("Picture Download")
@@ -160,9 +135,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
         }
     }
 
-    /**
-     * Create a channel and set the importance
-     */
+    /*Create a channel and set the importance*/
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channelId = CHANNEL_ID
@@ -183,81 +156,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
         }
     }
 
-    private fun startNotification() {
-        val areNotificationEnabled = mNotificationManagerCompat.areNotificationsEnabled()
-
-        /**
-         * re-enable notifications for thí application again if it disable
-         */
-        if (!areNotificationEnabled) {
-            /**
-             * Show notifications to users
-             */
-            Snackbar
-                .make(
-                    mainRelativeLayout,
-                    "You need to enable notifications for this app",
-                    Snackbar.LENGTH_LONG
-                )
-                .setAction("ENABLE") {
-                    openNotificationSettingsForApp()
-                }
-                .show()
-            return
-        }
-
-        when (NOTIFICATION_STYLES[mSelectedNotification]) {
-            BIG_TEXT_STYLE -> generateBigTextStyleNotification()
-        }
-
-    }
-
-    /**
-     * Links to this app's notification settings
-     */
-    private fun openNotificationSettingsForApp() {
-        Intent().apply {
-            action = "android.settings.APP_NOTIFICATION_SETTINGS"
-            putExtra("app_package", packageName)
-            putExtra("app_uid", applicationInfo.uid)
-            startActivity(this)
-        }
-    }
-
-    private fun generateBigTextStyleNotification() {
-        /*Get data*/
-        val bigTextStyleReminderAppData = MockDatabase.getBigTextStyleData()
-
-        /* Create Notification Channel for O and beyond devices (26+) */
-        val notificationChannelId = NotificationUtil.createNotificationChannel(this, bigTextStyleReminderAppData)
-
-        /*Build the BIG_TEXT_STYLE*/
-        val bigTextStyle = NotificationCompat.BigTextStyle()
-            .bigText(bigTextStyleReminderAppData.getBigText())
-            .setBigContentTitle(bigTextStyleReminderAppData.getBigContentTitle())
-            .setSummaryText(bigTextStyleReminderAppData.getSumaryText())
-
-        /*Set up main Intent for notification*/
-        val notifyIntent = Intent(this, BigTextActivity::class.java)
-        notifyIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val notifyPendingIntent = PendingIntent.getActivity(
-            this,
-            0,
-            notifyIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        /* Create additional Actions for Notification*/
-//        val snoozeIntent = Intent(this, Big)
-    }
-
     companion object {
-        val NOTIFICATION_ID = 888
 
-        val BIG_TEXT_STYLE = "BIG_TEXT_STYLE"
-        val BIG_PICTURE_STYLE = "BIG_PICTURE_STYLE"
-        val INBOX_STYLE = "INBOX_STYLE"
-        val MESSAGING_STYLE = "MESSAGING_STYLE"
+        const val BIG_TEXT_STYLE = "BIG_TEXT_STYLE"
+        const val BIG_PICTURE_STYLE = "BIG_PICTURE_STYLE"
+        const val INBOX_STYLE = "INBOX_STYLE"
+        const val MESSAGING_STYLE = "MESSAGING_STYLE"
 
         val NOTIFICATION_STYLES = arrayOf(
             BIG_TEXT_STYLE,
@@ -273,8 +177,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
             "Demos messaging app using MESSAGING_STYLE + inline notification responses"
         )
 
+        const val NOTIFICATION_ID = 888
         const val CHANNEL_ID = "notification_basic"
+
+        const val NOTIFICATION_PUSH_ID = 889
+        const val CHANNEL_PUSH_ID = "notification_push"
+        const val CHANNEL_PUSH_NAME = "PUSH NOTIFICATION"
+
         const val ACTION_SNOOZE = "com.example.notificationsample.ui.SNOOZE"
-        const val KEY_TEXT_REPLY = "key_text_reply"
     }
 }
