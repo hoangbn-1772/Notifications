@@ -1,13 +1,8 @@
 package com.example.notificationsample.services
 
 import android.app.IntentService
-import android.app.PendingIntent
 import android.content.Intent
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.notificationsample.R
-import com.example.notificationsample.data.db.MockDatabase
-import com.example.notificationsample.ui.BigTextActivity
 import com.example.notificationsample.ui.MainActivity
 import com.example.notificationsample.utils.GlobalNotificationBuilder
 import java.util.concurrent.TimeUnit
