@@ -170,7 +170,7 @@ Một số thay đổi theo phiên bản của Android
 
 - Cấu trúc: Gồm 3 phần chính
 	+ Server: Cung cấp dịch vụ (APNS, FCM, SNS, Pushwoosh,...)
-	+ Application server 
+	+ App server
 	+ Thiết bị cuối: hiển thị thông báo.
 - Cơ chế hoạt động:
 	+ Các thiết bị client sẽ đăng ký với server để lấy mã token.
@@ -196,19 +196,43 @@ sự chú ý của người dùng.
 	+ Thời gian triển khai nhanh, config server dễ dàng
 	+ Tiết kiệm chi.
 - Message types trong FCM
-	+ Notification messages: Được xử lý tự động bởi FCM SDK/ onMessageReceived được gọi khi app ở foreground
-	+ Data message: Được xử lý bởi client app/ onMessageReceived được gọi khi app ở cả foreground/background
-- Cấu trúc Notification message:
+	+ Notification messages: Được xử lý tự động bởi FCM SDK (FCM tự động hiển thị thông báo)/ onMessageReceived được gọi khi app ở foreground. Sử dụng khi chỉ hiển thị thông báo tới người dùng.
 
-	<img src="images/notification_messages.png"/>
+			<img src="images/notification_messages.png"/>
+
+	+ Data message: Được xử lý bởi client app/ onMessageReceived được gọi khi app ở cả foreground/background. Sử dụng khi muốn xử lý tin nhắn ở client.
+
+			<img src="images/data_messages.png"/>
+
+	+ Ngoài ra, có thể kết hợp 2 loại trên, trong trường hợp này FCM sẽ xử lý hiển thị thông báo và client app xử lý data.
+			<img src="images/noti_data_messages.png.png"/>
 
 - Xử lý thông báo:
-	+ Để nhận notification, tạo 1 service kế thừa FirebaseMessagingService và override 2 method onMessageReceive và onDeleteMessages, Firebase notifications được xử lý khác nhau phụ thuộc vào trạng thái của app (background/foreground)
-	+ Foreground: Khi app ở trạng thái foreground, tất cả các tin nhắn nhận được xử lý bởi app. Thực hiện trong method onMessageReceive, hàm này chỉ được gọi khi app ở trạng thái foreground.
-	+ Background: Notification sẽ được xử lý theo quy trình Google Service. Thay vì sử dụng notification messages thay bằng data massage
+	+ Foreground: 
+		+ Notification messages: : Thông báo được xử lý trong method onMessageReceive.
+		+ Data messages: Thông báo được xử lý trong method onMessageReceive.
+		+ Both: Thông báo được xử lý trong method onMessageReceive.
+	+ Background:
+		+ Notification messages: Được gửi đến khay thông báo.
+		+ Data messages: Thông báo được xử lý trong method onMessageReceive.
+		+ Both: Thông báo được gửi đến khay thông báo đối với Notification messages, và xử lý data khi tap vào notification.
 
 	<img src="images/handling_messages.png"/>
 
+- Tin nhắn không thể thu gọn và có thể thu gọn:
+	+ Tin nhắn không thể thu gọn: Biểu thị mỗi tin nhắn riêng lẻ được gửi đến thiết bị, cung cấp một số nội dung hữu ích. Ví dụ điển hình như là tin nhắn trò chuyện. Giới hạn sẽ có 100 thông báo có thể được lưu trữ không bị mất đi. Nếu đạt đến giới hạn, tất cả các thông báo sẽ được loại bỏ. Khi thiết bị online nó sẽ nhận được một thông báo đặc biệt cho biết đã đạt đến giới hạn. Sau đó ứng dụng có thể xử lý tình huống đúng cách, thông thường bằng cách yêu cầu đồng bộ hóa đầy đủ từ máy chủ ứng dụng.
+	+ Tin nhắn có thể thu gọn: là một thông báo có thể được thay thế bằng một thông báo mới nếu nó vẫn chưa được gửi tới thiết bị. Ví dụ như các thông báo cho ứng dụng đồng bộ hóa từ máy chủ. Để đánh dấu thông báo có thể thu gọn, thêm tham số collapse_key trong message. FCM có thể lưu trữ đồng thời 4 thông báo có thể thu gọn khác nhau trên mỗi thiết bị, mỗi thông báo có một khóa thu gon khác nhau.
+	+ Cái nào tối ưu hơn? Thông báo có thể thu gọn là lựa chọn tốt theo quan điểm hiệu suất, nhưng FCM chỉ cho phép tốt đa 4 khóa thu gọn khác nhau. (Tùy vào từng hoàn cảnh)
+- Mức độ ưu tiên của tin nhắn:
+	+ Normal priority: Đây là ưu tiên mặc định cho các data message. Thông thường thông báo sẽ được gửi ngay lập tức khi ứng dụng ở foreground. Khi thiết bị ở trạng thái Doze, việc gửi có thể bị trì hoãn để tiết kiệm pin. 
+	+ High priority: FCM sẽ cố gắng gửi thông báo ngay lập tức, cho phép dịch vụ của FCM đánh thức thiết bị ngủ khi cần thiết.
+- Tuổi thọ của thông báo.
+	+ Không phải lúc nào FCM cũng gửi thông báo ngay lập tức sau khi chúng nhận được như khi thiệt bị đang tắt, ngoại tuyến, pin yếu,... Khi điều này xảy ra, FCM sẽ lưu trữ thông báo và gửi nó ngay khi khả thi. Mặc dù điều này là tốt trong hầu hết các trường hợp, những có một số trường hợp không thể gửi các thông báo muộn. Ví dụ: thông báo cuộc gọi đến, trò chuyện video chỉ tồn tại trong khoảng thời nhất định.
+	+ Có thể chỉ định thời gian tối đa mà FCM lưu trữ và cố gắng gửi thông báo, thời lượng từ 0 đến 28 ngày. Nếu không mặc định sẽ là 4 tuần.
+- Nhận thông báo từ nhiều nguồn:
+	+ FCM cho phép nhiều bên gửi thông báo đến cùng một client app. Thay vì tập trung tất cả các hoạt động gửi ở 1 địa điểm, FCM cung cấp cho khả năng cho phép mỗi bên gửi gửi thông báo riêng của mình.
+	+ Đảm bảo bạn có token của mỗi bên gửi, không thêm quá nhiều token bên gửi vào một token request. Giới hạn 100 người gửi
+	+ Chia sẻ token đã đăng ký với bên gửi tương ứng, và họ có thể gửi thông báo bằng khóa xác thực của riêng họ.
 #### Practice:
 - Tạo project:
 - Đăng ký với Firebase để generate token (Firebase Console)
@@ -240,7 +264,6 @@ sự chú ý của người dùng.
 	+ https://firebase.google.com/docs/cloud-messaging/android/receive
 	+ https://medium.com/@nileshsingh/how-to-add-push-notification-capability-to-your-android-app-a3cac745e56e
 	+ https://medium.com/techsuzu/android-push-notification-using-fcm-firebase-cloud-messaging-c37d165b8320
-	+ https://medium.com/@cdmunoz/working-easily-with-fcm-push-notifications-in-android-e1804c80f74
 - Đọc thêm:
 	+ https://medium.com/@deividi/a-good-way-to-handle-incoming-notifications-in-android-dc64c29041a5
 	+ https://android.jlelse.eu/android-push-notification-using-firebase-and-advanced-rest-client-3858daff2f50

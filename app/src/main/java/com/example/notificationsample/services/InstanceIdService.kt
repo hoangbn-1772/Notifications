@@ -27,6 +27,9 @@ class InstanceIdService : FirebaseMessagingService() {
         notificator?.let { NotificationUtil.startPushNotification(this, it, pushChannel) }
     }
 
+    /**
+     *
+     */
     override fun onDeletedMessages() {
         super.onDeletedMessages()
     }
