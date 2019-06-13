@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -29,7 +30,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        getDataFromNotification()
         initComponents()
+
     }
 
     override fun onClick(v: View?) {
@@ -76,6 +79,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener, Vi
             addAction(ACTION_SNOOZE)
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(basicBroadcastReceiver, filter)
+    }
+
+    private fun getDataFromNotification(){
+        val intentNotification = intent
+        val data = intentNotification?.extras?.getString("MARK")
+        data?.run {
+            Log.d("TAG", "Extras: $this")
+        }
     }
 
     /*Notification basic*/

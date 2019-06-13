@@ -1,7 +1,7 @@
 # Notifications
 
 # Overview
-	Notification là một tin nhắn hiển thị bên ngoài giao diện người dùng nhằm thông báo tới người dùng khi ứng dụng có event.
+- Notification là một tin nhắn hiển thị bên ngoài giao diện người dùng nhằm thông báo tới người dùng khi ứng dụng có event.
 ## Các dạng hiển thị thông báo
 ### Status bar và notification drawer
 - status bar: thông báo xuất hiện duới dạng icon, có thể kéo xuống để mở notification drawer.
@@ -22,14 +22,14 @@
 
 	<img src="images/heads-up.png"/>
 
-- Trường hợp có thể kích hoạt heads-up notifications:
+- Trường hợp có thể sử dụng heads-up notifications:
 	+ Hoạt động của người dùng ở chế độ toàn màn hình (fullScreenIntent).
-	+ notification có độ ưu tiên cao và sử dụng nhạc chuông hoặc rung (Chạy trên các device từ Android 7.1 trở xuống).
-	+ notification channel có độ quan trọng cao với các device từ Android 8.0 trở lên.
+	+ Notification có độ ưu tiên cao và sử dụng nhạc chuông hoặc rung (Chạy trên các device từ Android 7.1 trở xuống).
+	+ Notification channel có độ quan trọng cao với các device từ Android 8.0 trở lên.
 ### Lock screen
 - Từ Android 5.0, notification có thể hiển thị trên màn hình khóa.
 - Có thể setup mức độ chi tiết hiển thị của notification, thậm chí có thể có thể quy định notification có hiển thị trên màn hình khóa không
-- Người dùng có thể sử dụng system settings để chọn mức độ chi tiết hiển thi, bao gồm cả tùy chọn tắt tất cả thông báo màn hình khóa.
+- Người dùng có thể sử dụng system settings để chọn mức độ chi tiết hiển thị, bao gồm cả tùy chọn tắt tất cả thông báo màn hình khóa.
 - Bắt đầu từ Android 8.0, người dùng có thể chọn tắt hoặc bật thông báo màn hình khóa cho từng kênh thông báo.
 
 	<img src="images/lock_screen.png"/>
@@ -45,12 +45,12 @@
 
 ## Cấu trúc 1 notification
 
-	<img src="images/notication_structure.png"/>
+<img src="images/notication_structure.png"/>
 	
 - small icon: Bắt buộc và thiết lập bằng setSmallIcon()
 - App name: Được cung cấp bởi hệ thống
 - Time stamp: Được cung cấp bởi hệ thống nhưng có thể ghi đè bằng setWhen() hoặc ẩn nó bằng setShowWhen(false)
-- Larget icon: Đây là tùy chọn (thường sử dụng cho ảnh liên hệ, không sử dụng app icon) và thiết lập bằng setLargeIcon()
+- Large icon: Đây là tùy chọn (thường sử dụng cho ảnh liên hệ, không sử dụng app icon) và thiết lập bằng setLargeIcon()
 - Title: Đây là tùy chọn, thiết lập bằng setContentTitle()
 - Text: Đây là tùy chọn, thiết lập bằng setContentText()
 
@@ -66,12 +66,12 @@
 
 	<img src="images/expandable_notificaton.png"/>
 
-- Cũng có thể tạo thông báo có thể mở rộng bằng hình ảnh, theo kiểu hộp thư đến, cuộc trò chuyên hoặc media playback controls.
+- Cũng có thể tạo thông báo có thể mở rộng hình ảnh, theo kiểu hộp thư đến, cuộc trò chuyên hoặc media playback controls.
 - Tham khảo: https://developer.android.com/training/notify-user/expanded.html
 
 ## Notification updates and groups
 - Để tránh tạo thông báo mới của cùng một loại thông báo, ta nên xem xét cập nhật thông báo đã tồn tại hoặc xem xét sử dụng inbox-style notification để hiển thị cập nhật cuộc hội thoại.
-Tham khảo: + https://developer.android.com/training/notify-user/build-notification.html#Updating
+- Tham khảo: + https://developer.android.com/training/notify-user/build-notification.html#Updating
 	   + https://developer.android.com/training/notify-user/expanded.html#inbox-style
 - Nếu cần cung cấp nhiều notification, xem xét nhóm các thông báo riêng biệt đó thành một nhóm (Có sẵn từ Android 7.0 trở lên). Một nhóm thông báo cho phép thu gọn nhiều thông báo chỉ trong một bài đăng trong notification drawer với một bản tóm tắt.
 
@@ -83,26 +83,25 @@ Tham khảo: + https://developer.android.com/training/notify-user/build-notifica
 ## Notification channels
 - Từ Android 8.0 (API level 26), tất cả các notifications phải assigned vào một channel hoặc nó sẽ không xuất hiện.
 - Bằng cách phân loại notification thành các kênh, users có thể vô hiệu hóa các kênh thông báo cụ thể cho ứng dụng (thay vì disable tất cả các thông báo), kiểm soát các tùy chọn về hình ảnh và audio cho mỗi channel. Users cũng có thể long-press một notification để thay đổi hành vi cho kênh liên kết.
-Android system settings:
+- Android system settings:
 
 	<img src="images/notification_channel.png"/>
 
 - Các thiết bị chạy Android 7.1 (API level 25) trở xuống, users chỉ có thể quản lý notifications trên mỗi app (Mỗi app chỉ có một channel)
 - Một app có thể có nhiều notification channel, có một channel riêng cho mỗi loại notification về sự cố app.
-- Một app cũng có thể tạo các kênh thông báo để đáp ứng với các sự lựa chọn của users
-Ví du: thiết lập kênh thông báo riêng cho từng nhóm hội thoại.
+- Một app cũng có thể tạo các kênh thông báo để đáp ứng với các sự lựa chọn của users. Ví du: thiết lập kênh thông báo riêng cho từng nhóm hội thoại.
 - Kênh cũng là nơi chỉ định mức độ quan trọng cho thông báo (Android 8.0 trở lên). Vì vậy, tất cả các thông báo cùng một kênh có hành vi giống nhau.
 - Tham khảo: https://developer.android.com/training/notify-user/channels.html
 
 ## Notification importance
-- Android sử dụng ##### importance của thông báo để xác định mức độ thông báo làm ảnh hưởng tới user. Tầm quan trọng của thông báo càng cao, thông báo sẽ càng bị gián đoạn.
-- Từ Android 8.0 trở lên, importance của thông báo được xác định bởi ##### importance của channel mà notification được đăng lên.
-- Từ Android 7.1 trở xuống, tầm quan trọng của mỗi notification được xác định theo ##### priority của thông báo.
+- Android sử dụng importance của thông báo để xác định mức độ thông báo làm ảnh hưởng tới user. Tầm quan trọng của thông báo càng cao, thông báo sẽ càng bị gián đoạn.
+- Từ Android 8.0 trở lên, importance của thông báo được xác định bởi thuộc tính importance của channel mà notification được đăng lên.
+- Từ Android 7.1 trở xuống, tầm quan trọng của mỗi notification được xác định theo thuộc tính priority của thông báo.
 
 	<img src="images/notification_importance.png"/>
 
-- Các mức ##### importance như là:
-	+ Urgent: Có âm thanh thanh và xuất hiện như ##### heads-up notification.
+- Các mức importance như là:
+	+ Urgent: Có âm thanh thanh và xuất hiện như heads-up notification.
 	+ High: Có âm thanh
 	+ Medium: Không có âm thanh
 	+ Low: Không có âm thanh và không xuất hiện trên status bar.
@@ -118,7 +117,7 @@ Ví du: thiết lập kênh thông báo riêng cho từng nhóm hội thoại.
 	<img src="images/priority_only.png"/>
 
 - Từ Android 8.0 trở lên, users có thể cho phép thêm thông báo cho các danh mục (kênh) dành riêng cho ứng dụng bằng cách ghi đè Do Not Disturb trên cơ sở từng kênh.
-- Ví dụ: App thanh toán có thể có các kênh thông báo liên quan đến rút tiền và gửi tiền, users có thể cho phép thông báo rút tiền, thông báo gửi tiền, hoặc cả 2 ở chế độ ưu tiên.
+	+ Ví dụ: App thanh toán có thể có các kênh thông báo liên quan đến rút tiền và gửi tiền, users có thể cho phép thông báo rút tiền, thông báo gửi tiền, hoặc cả 2 ở chế độ ưu tiên.
 
 ## Notification for foreground services
 - Một notificaiton được yêu cầu khi app chạy ở "foreground service" ví dụ như media player. Notification này không thể dismiss như các thông báo khác. Để remove notification này, service phải stopped hoặc removed từ trạng thái "foreground"
@@ -127,12 +126,12 @@ Ví du: thiết lập kênh thông báo riêng cho từng nhóm hội thoại.
 	+ https://developer.android.com/guide/topics/media-apps/audio-app/building-a-mediabrowserservice.html#mediastyle-notifications
 
 ## Posting limits
-- Bắt đầu từ Android 8.1, app không thể phát âm thanh nhiều hơn 1lần/1s. Nếu app có nhiều thông báo trong 1s, nó sẽ xuất hiện như bình thường nhưng chỉ có thông báo đầu tiên có âm thanh.
+- Bắt đầu từ Android 8.1 (API level 27), app không thể phát âm thanh nhiều hơn 1lần/1s. Nếu app có nhiều thông báo trong 1s, nó sẽ xuất hiện như bình thường nhưng chỉ có thông báo đầu tiên có âm thanh.
 - Android giới hạn tốc độ khi cập nhật thông báo, nếu update lên notification quá thường xuyên (nhiều lần chưa đầy 1s) hệ thống có thể bỏ qua một số update.
 
 ## Notification compatibility
 Một số thay đổi theo phiên bản của Android
--Android 4.1, API level 16
+- Android 4.1, API level 16
 	+ Thêm expandable notification
 	+ Thêm các nút hành động vào notification
 	+ Thêm chức năng cho user có thể tắt thông báo trên mỗi app trong settings.
@@ -160,8 +159,8 @@ Một số thay đổi theo phiên bản của Android
 # Push notification
 - Push notification: 
 	+ Là việc gửi thông báo tới thiết bị từ máy chủ ứng dụng mà không có yêu cầu từ người sử dụng.
-	+ Push notification không yêu cầu mở ứng dụng để nhận thông báo, vì vậy người dùng có thể thấy thông báo ngay cả khi ứng dụng không mở.
-	+ Tương tự như một SMS thông thường nhưng không mất bất cứ khoản tri phí nào.
+	+ Có thể nhận thông báo ngay cả khi ứng dụng không mở.
+	+ Không mất bất cứ khoản phí nào.
 	+ Đóng một vai trò quan trọng trong thành công của app. Nó giúp ta tiếp cận, tương tác với người dùng, cung cấp cho người dùng các bản cập nhật, cập nhật 
 ứng dụng di động và nhiều hơn thế.
 	+ Người dùng có thể bật/tắt để nhận thông báo.
@@ -175,7 +174,7 @@ Một số thay đổi theo phiên bản của Android
 - Cơ chế hoạt động:
 	+ Các thiết bị client sẽ đăng ký với server để lấy mã token.
 	+ Nội dung thông báo sẽ được soạn gửi về server.
-	+ Server nhận nội dung thông báo, xử lý rồi gửi về các thiết bị đã đăng ký với server (Đảm bảo có kết nối internet)
+	+ Server nhận nội dung thông báo, xử lý rồi gửi về các thiết bị đã đăng ký với server (Đảm bảo có kết nối internet). Server dựa vào token này để gửi thông báo.
 - Ưu điểm:
 	+ Kích thích sự tham gia của người dùng: Thông báo cho phép bạn giữ liên lạc với người dùng của mình bằng cách cung cấp các tin nhắn kịp thời và các thông tin hữu ích.
 	+ Chi phí: Người dùng không phải trả bất cứ phí gì cho thông báo này.
@@ -187,25 +186,26 @@ xúc trong kênh tiếp thị của ứng dụng. Push notification tạo thành
 sự chú ý của người dùng.
 
 - Nhược điểm:
-	+ Notification phụ thuộc vào đường truyền internet, thiết bị, server của nhà cung cấp
-	+ Việc lựa chọn thời điểm phát thông báo là rất quan trọng.
+	+ Notification phụ thuộc vào đường truyền internet, devices, server của nhà cung cấp
+	+ Việc lựa chọn thời điểm phát thông báo là rất quan trọng để giúp người dùng có trải nghiệm phù hợp.
 
 ### Push notification với FCM (Firebase Cloud Message)
-- FCM: Là dịch vụ miễn phí của Google, thông qua FCM các nhà phát triển ứng dụng có thể gửi thông điệp một cách nhanh chóng, an toàn tới các thiết bị cài đặt ứng dụng.
+- FCM: Là dịch vụ miễn phí của Google, thông qua FCM các nhà phát triển ứng dụng có thể gửi thông báo một cách nhanh chóng, an toàn tới các thiết bị cài đặt ứng dụng.
 - Ưu điểm:
 	+ Thời gian triển khai nhanh, config server dễ dàng
 	+ Tiết kiệm chi.
 - Message types trong FCM
 	+ Notification messages: Được xử lý tự động bởi FCM SDK (FCM tự động hiển thị thông báo)/ onMessageReceived được gọi khi app ở foreground. Sử dụng khi chỉ hiển thị thông báo tới người dùng.
 
-			<img src="images/notification_messages.png"/>
+		<img src="images/notification_messages.png"/>
 
 	+ Data message: Được xử lý bởi client app/ onMessageReceived được gọi khi app ở cả foreground/background. Sử dụng khi muốn xử lý tin nhắn ở client.
 
-			<img src="images/data_messages.png"/>
+		<img src="images/data_messages.png"/>
 
 	+ Ngoài ra, có thể kết hợp 2 loại trên, trong trường hợp này FCM sẽ xử lý hiển thị thông báo và client app xử lý data.
-			<img src="images/noti_data_messages.png.png"/>
+
+		<img src="images/noti_data_messages.png"/>
 
 - Xử lý thông báo:
 	+ Foreground: 
@@ -259,12 +259,15 @@ sự chú ý của người dùng.
 
 		<img src="images/receive_notification.png"/>
 
+- Kết quả:
+
+	<img src="images/result_test.png" height = "500" width = "250"/>
+
 - Tham khảo:
 	+ https://developer.android.com/guide/topics/ui/notifiers/notifications#appearances
 	+ https://firebase.google.com/docs/cloud-messaging/android/receive
 	+ https://medium.com/@nileshsingh/how-to-add-push-notification-capability-to-your-android-app-a3cac745e56e
 	+ https://medium.com/techsuzu/android-push-notification-using-fcm-firebase-cloud-messaging-c37d165b8320
-- Đọc thêm:
 	+ https://medium.com/@deividi/a-good-way-to-handle-incoming-notifications-in-android-dc64c29041a5
 	+ https://android.jlelse.eu/android-push-notification-using-firebase-and-advanced-rest-client-3858daff2f50
 
